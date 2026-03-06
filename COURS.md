@@ -43,6 +43,30 @@ Il permet aux apprenants de comprendre le flux d'exécution séquentiel, la gest
    - [Les tableaux associatifs](#642---les-tableaux-associatifs)
    - [Les tableaux multidimensionnels](#643---les-tableaux-multidimensionnels)
    - [Les variables superglobales](#65---les-variables-superglobales)
+7. [Les constantes](#7---les-constantes)
+8. [Les opérateurs](#8---les-opérateurs)
+   - [Les opérateurs arithmétiques](#81---les-opérateurs-arithmétiques)
+   - [Les opérateurs de comparaison](#82---les-opérateurs-de-comparaison)
+   - [Les opérateurs logiques](#83---les-opérateurs-logiques)
+   - [Les opérateurs d'affectation](#84---les-opérateurs-daffectation)
+   - [Les opérateurs d'incrémentation et décrémentation](#85---les-opérateurs-dincrémentation-et-décrémentation)
+   - [L'opérateur de concaténation](#86---lopérateur-de-concaténation)
+9. [Les conditions](#9---les-conditions)
+   - [if / else / elseif](#91---if--else--elseif)
+   - [switch](#92---switch)
+   - [match (PHP 8)](#93---match-php-8)
+   - [L'opérateur ternaire](#94---lopérateur-ternaire)
+   - [Syntaxe alternative](#95---syntaxe-alternative-pour-les-conditions)
+10. [Les boucles](#10---les-boucles)
+    - [for](#101---for)
+    - [foreach](#102---foreach)
+    - [while](#103---while)
+    - [do...while](#104---dowhile)
+    - [break et continue](#105---break-et-continue)
+11. [Les inclusions de fichiers](#11---les-inclusions-de-fichiers)
+    - [include / include_once](#111---include-et-include_once)
+    - [require / require_once](#112---require-et-require_once)
+    - [Le contrôleur frontal](#113---le-contrôleur-frontal-front-controller)
 
 ## 1 - Présentation de PHP
 
@@ -633,6 +657,586 @@ echo $_GET["section"]; // contact
 
 #### ✏️ Exercice 12
 > Créez `12-GET.php` : une page HTML avec 4 liens qui pointent vers des variables GET différentes (ex: `?section=accueil`, `?section=contact`, etc.). Affichez le contenu de `$_GET` avec `var_dump()`.
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+## 7 - Les constantes
+
+Une constante est un identifiant dont la valeur **ne peut pas changer** durant l'exécution du script.
+
+**Bonnes pratiques** : MAJUSCULES en `SNAKE_CASE`.
+
+```php
+<?php
+// Avec define()
+define("NOM_DU_SITE", "CF2M WebDev");
+echo NOM_DU_SITE; // CF2M WebDev
+
+// Avec const
+const VERSION = "2.0";
+echo VERSION; // 2.0
+
+// Les constantes sont GLOBALES
+function afficherSite() {
+    echo NOM_DU_SITE; // Accessible partout !
+}
+```
+
+**Constantes magiques** (changent selon le contexte) :
+
+| Constante | Description |
+|-----------|-------------|
+| `__LINE__` | Numéro de ligne actuel |
+| `__FILE__` | Chemin complet du fichier |
+| `__DIR__` | Répertoire du fichier |
+| `__FUNCTION__` | Nom de la fonction |
+| `__CLASS__` | Nom de la classe |
+| `PHP_VERSION` | Version de PHP |
+| `PHP_INT_MAX` | Valeur max d'un entier |
+
+📖 [Documentation : Constantes](https://www.php.net/manual/fr/language.constants.php)
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+## 8 - Les opérateurs
+
+### 8.1 - Les opérateurs arithmétiques
+
+| Opérateur | Description | Exemple | Résultat |
+|-----------|-------------|---------|----------|
+| `+` | Addition | `5 + 3` | `8` |
+| `-` | Soustraction | `5 - 3` | `2` |
+| `*` | Multiplication | `5 * 3` | `15` |
+| `/` | Division | `10 / 3` | `3.333…` |
+| `%` | Modulo (reste) | `10 % 3` | `1` |
+| `**` | Puissance | `2 ** 3` | `8` |
+
+📖 [Documentation : Opérateurs arithmétiques](https://www.php.net/manual/fr/language.operators.arithmetic.php)
+
+---
+
+### 8.2 - Les opérateurs de comparaison
+
+| Opérateur | Description | Exemple |
+|-----------|-------------|---------|
+| `==` | Égal à (valeur) | `5 == "5"` → `true` |
+| `===` | Strictement égal (valeur ET type) | `5 === "5"` → `false` |
+| `!=` ou `<>` | Différent de | `5 != 3` → `true` |
+| `!==` | Strictement différent | `5 !== "5"` → `true` |
+| `<` | Inférieur à | `3 < 5` → `true` |
+| `>` | Supérieur à | `5 > 3` → `true` |
+| `<=` | Inférieur ou égal | `5 <= 5` → `true` |
+| `>=` | Supérieur ou égal | `5 >= 3` → `true` |
+| `<=>` | Comparaison combinée (spaceship) | `1 <=> 2` → `-1` |
+
+> ⚠️ **Attention** : `==` compare les valeurs sans vérifier le type. Utilisez `===` quand c'est possible pour éviter des bugs subtils !
+
+📖 [Documentation : Opérateurs de comparaison](https://www.php.net/manual/fr/language.operators.comparison.php)
+
+---
+
+### 8.3 - Les opérateurs logiques
+
+| Opérateur | Description | Détails |
+|-----------|-------------|---------|
+| `&&` ou `and` | ET | Toutes les conditions doivent être vraies |
+| `\|\|` ou `or` | OU | Au moins une condition doit être vraie |
+| `xor` | OU exclusif | Une seule des conditions doit être vraie |
+| `!` | NON (Not) | Inverse la condition |
+
+```php
+<?php
+$age = 25;
+$estMajeur = ($age >= 18);       // true
+$estJeune = ($age < 30);         // true
+
+if ($estMajeur && $estJeune) {
+    echo "Majeur et jeune";
+}
+
+if (!$estMajeur) {
+    echo "Mineur";
+}
+```
+
+📖 [Documentation : Opérateurs logiques](https://www.php.net/manual/fr/language.operators.logical.php)
+
+---
+
+### 8.4 - Les opérateurs d'affectation
+
+| Opérateur | Description | Équivalent |
+|-----------|-------------|------------|
+| `=` | Affectation | `$a = 5` |
+| `+=` | Addition et affectation | `$a = $a + 2` |
+| `-=` | Soustraction et affectation | `$a = $a - 2` |
+| `*=` | Multiplication et affectation | `$a = $a * 2` |
+| `/=` | Division et affectation | `$a = $a / 2` |
+| `%=` | Modulo et affectation | `$a = $a % 2` |
+| `.=` | Concaténation et affectation | `$a = $a . " suite"` |
+
+📖 [Documentation : Opérateurs d'affectation](https://www.php.net/manual/fr/language.operators.assignment.php)
+
+---
+
+### 8.5 - Les opérateurs d'incrémentation et décrémentation
+
+```php
+<?php
+$a = 1;
+echo $a++;  // Affiche 1, PUIS incrémente → $a vaut 2
+echo $a;    // 2
+echo ++$a;  // Incrémente PUIS affiche → 3
+echo $a--;  // Affiche 3, PUIS décrémente → $a vaut 2
+echo --$a;  // Décrémente PUIS affiche → 1
+```
+
+> 💡 **Pré-incrémentation** (`++$a`) : incrémente **avant** l'utilisation.
+> **Post-incrémentation** (`$a++`) : incrémente **après** l'utilisation.
+
+📖 [Documentation : Incrémentation](https://www.php.net/manual/fr/language.operators.increment.php)
+
+---
+
+### 8.6 - L'opérateur de concaténation
+
+Le point `.` sert à coller des chaînes de caractères ensemble :
+
+```php
+<?php
+$prenom = "Jean";
+$nom = "Dupont";
+
+// Concaténation
+echo $prenom . " " . $nom; // Jean Dupont
+
+// Concaténation avec affectation
+$phrase = "Bonjour";
+$phrase .= " le monde";
+echo $phrase; // Bonjour le monde
+
+// Interpolation dans les guillemets doubles
+echo "Bonjour $prenom $nom"; // Bonjour Jean Dupont
+echo "Bonjour {$prenom} {$nom}"; // Bonjour Jean Dupont (recommandé)
+
+// ⚠️ Pas d'interpolation dans les guillemets simples !
+echo 'Bonjour $prenom $nom'; // Bonjour $prenom $nom (littéral)
+```
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+## 9 - Les conditions
+
+Les conditions sont la **deuxième brique fondamentale** d'un langage de programmation. Elles permettent d'évaluer l'état de propositions et d'exécuter du code en conséquence.
+
+### 9.1 - if / else / elseif
+
+```php
+<?php
+// if simple
+$a = true;
+if ($a) {
+    echo "ok";
+}
+
+// if / else
+$a = false;
+if ($a) {
+    echo "ok";
+} else {
+    echo "ko";
+}
+
+// if / elseif / else
+$temperature = mt_rand(-100, 200);
+
+if ($temperature <= 0) {
+    echo "L'eau est solide à {$temperature}°";
+} elseif ($temperature < 100) {
+    echo "L'eau est liquide à {$temperature}°";
+} else {
+    echo "L'eau est gazeuse à {$temperature}°";
+}
+```
+
+#### ✏️ Exercice 13
+> Créez `13-eau.php` : générez une température aléatoire entre -100 et 200° et affichez l'état de l'eau (solide ≤ 0, liquide entre 1 et 99, gazeux ≥ 100).
+
+#### ✏️ Exercice 14
+> Créez `14-pair.php` : générez un nombre aléatoire entre 1 et 20 avec `mt_rand()`. S'il est pair, affichez "Le nombre X est pair", sinon "Le nombre X est impair". **Indice** : utilisez l'opérateur modulo `%`.
+
+#### ✏️ Exercice 15
+> Créez `15-conditions.php` : générez un chiffre entre 0 et 10, puis affichez : 0-3 → "X : Nul, étudie la prochaine fois", 4-5 → "X : Peut mieux faire", 6-7 → "X : Bien", 8-10 → "X : Très bien".
+
+---
+
+### 9.2 - switch
+
+Le `switch` vérifie l'égalité **non stricte** d'une variable contre plusieurs cas. Plus lisible que de multiples `elseif` pour des comparaisons d'égalité.
+
+> ⚠️ Le `switch` de PHP est **non strict** (`==`), contrairement à celui de JavaScript (`===`).
+> **Attention** : sans `break`, l'exécution continue dans les cas suivants (effet de chute).
+> La syntaxe moderne de `match` (PHP 8) est strict et retourne une valeur, sans risque d'oubli de `break`. Nous verrons `match` par la suite.
+
+```php
+<?php
+$note = mt_rand(1, 4);
+
+switch ($note) {
+    case 1:
+        echo "Première place, bravo !";
+        break; // IMPORTANT : sans break, l'exécution continue !
+    case 2:
+        echo "Deuxième place";
+        break;
+    case 3:
+        echo "Troisième place";
+        break;
+    default: // sinon (= else)
+        echo "Quatrième place";
+}
+
+// Regrouper des cas
+switch ($note) {
+    case 1:
+    case 2:
+    case 3:
+        echo "Podium !";
+        break;
+    default:
+        echo "Hors podium";
+}
+```
+
+📖 [Documentation : switch](https://www.php.net/manual/fr/control-structures.switch.php)
+
+#### ✏️ Exercice 15b
+> Créez `15b-switch.php` : refaites l'exercice 15 en utilisant un `switch`.
+
+---
+
+### 9.3 - match (PHP 8)
+
+`match` est un `switch` **strict** (`===`) qui retourne une valeur, sans risque d'oubli de `break`.
+
+```php
+<?php
+$status = 200;
+
+$message = match ($status) {
+    200 => "OK",
+    301 => "Redirection permanente",
+    404 => "Page non trouvée",
+    500 => "Erreur serveur",
+    default => "Statut inconnu",
+};
+
+echo $message; // OK
+```
+
+📖 [Documentation : match](https://www.php.net/manual/fr/control-structures.match.php)
+
+---
+
+### 9.4 - L'opérateur ternaire
+
+Une condition condensée sur une seule ligne :
+
+```php
+<?php
+$age = 20;
+
+// Ternaire classique
+$statut = ($age >= 18) ? "Majeur" : "Mineur";
+
+// Opérateur null coalescent (??) - PHP 7+
+$nom = $_GET["nom"] ?? "Anonyme";
+// Équivaut à : $nom = isset($_GET["nom"]) ? $_GET["nom"] : "Anonyme";
+```
+
+📖 [Documentation : Opérateur ternaire](https://www.php.net/manual/fr/language.operators.comparison.php#language.operators.comparison.ternary)
+
+---
+
+### 9.5 - Syntaxe alternative pour les conditions
+
+Utile lorsqu'on mélange PHP et HTML :
+
+```php
+<?php $point = mt_rand(0, 10); ?>
+
+<?php if ($point <= 3): ?>
+    <p>Nul, étudie la prochaine fois.</p>
+<?php elseif ($point < 6): ?>
+    <p>Peut mieux faire.</p>
+<?php elseif ($point < 8): ?>
+    <p>Bien.</p>
+<?php else: ?>
+    <p>Très bien !</p>
+<?php endif; ?>
+```
+
+📖 [Documentation : Syntaxe alternative](https://www.php.net/manual/fr/control-structures.alternative-syntax.php)
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+## 10 - Les boucles
+
+Les boucles permettent de **répéter** des instructions tant qu'une condition est vraie.
+
+> ⚠️ **Danger** : une boucle infinie fera planter le serveur !
+
+### 10.1 - for
+
+La boucle la plus **structurée**, idéale quand on connaît le nombre d'itérations.
+
+```php
+<?php
+for ($i = 0; $i <= 10; $i++) {
+    echo "$i ";
+}
+// Affiche : 0 1 2 3 4 5 6 7 8 9 10
+```
+
+**Structure** : `for (initialisation; condition; incrémentation)`
+
+#### ✏️ Exercice 16
+> Créez `16-boucle-for.php` :
+> a) Affichez les nombres de 1 à 100
+> b) Affichez les nombres **pairs** de 0 à 50
+> c) Affichez un décompte de 10 à 0
+> d) Affichez la table de multiplication de 7
+
+---
+
+### 10.2 - foreach
+
+La boucle la **plus utilisée** pour parcourir les tableaux.
+
+```php
+<?php
+$fruits = ['pomme', 'poire', 'banane', 'fraise', 'cerise'];
+
+// Sans la clé
+foreach ($fruits as $fruit) {
+    echo "$fruit ";
+}
+// pomme poire banane fraise cerise
+
+// Avec la clé
+foreach ($fruits as $index => $fruit) {
+    echo "$index : $fruit<br>";
+}
+// 0 : pomme
+// 1 : poire
+// etc.
+
+// Tableau associatif
+$personne = ["prenom" => "Jean", "nom" => "Dupont", "age" => 30];
+
+foreach ($personne as $cle => $valeur) {
+    echo "$cle : $valeur<br>";
+}
+```
+
+#### ✏️ Exercice 17
+> Créez `17-boucle-foreach.php` : créez un tableau de 10 prénoms et affichez-les dans une liste HTML `<ul><li>`.
+
+#### ✏️ Exercice 17b
+> Créez `17b-foreach-table.php` : créez un tableau associatif avec les données d'un stagiaire (nom, prénom, email, âge) et affichez-les dans un tableau HTML `<table>`.
+
+---
+
+### 10.3 - while
+
+Répète tant qu'une condition est vraie. La plus **souple**.
+
+```php
+<?php
+$i = 0;
+while ($i <= 10) {
+    echo "$i ";
+    $i++;
+}
+// 0 1 2 3 4 5 6 7 8 9 10
+```
+
+#### ✏️ Exercice 18
+> Créez `18-boucle-while.php` : utilisez une boucle while pour afficher les nombres de 1 à 20, en mettant en **gras** les nombres divisibles par 3.
+
+---
+
+### 10.4 - do...while
+
+Exécute les instructions **au moins une fois**, même si la condition est fausse.
+
+```php
+<?php
+$page = 1;
+$totalPages = 4;
+
+echo "Pages : ";
+do {
+    echo "$page ";
+    $page++;
+} while ($page <= $totalPages);
+// Pages : 1 2 3 4
+```
+
+#### ✏️ Exercice 18b
+> Créez `18b-do-while.php` : simulez un système de pagination affichant les numéros de page de 1 à N (N aléatoire entre 1 et 10).
+
+---
+
+### 10.5 - break et continue
+
+- `break` : **sort** de la boucle
+- `continue` : **saute** à l'itération suivante
+
+```php
+<?php
+for ($i = 0; $i < 20; $i++) {
+    if ($i == 15) break;       // Arrête à 15
+    if ($i % 2 != 0) continue; // Saute les impairs
+    echo "$i ";
+}
+// 0 2 4 6 8 10 12 14
+```
+
+📖 [Documentation : Boucles](https://www.php.net/manual/fr/language.control-structures.php)
+
+---
+
+[Retour à la table des matières](#table-des-matières)
+
+---
+
+## 11 - Les inclusions de fichiers
+
+Les expressions `include`, `include_once`, `require` et `require_once` permettent d'**inclure et exécuter** un fichier PHP.
+
+### 11.1 - include et include_once
+
+- `include` : inclut le fichier. Si absent → **warning**, le script continue.
+- `include_once` : idem, mais n'inclut **qu'une seule fois** le même fichier.
+
+```php
+<?php
+include("menu.php");         // Inclut menu.php
+include("menu.php");         // Inclut une 2ème fois menu.php
+
+include_once("footer.php");  // Inclut footer.php
+include_once("footer.php");  // N'inclut PAS une 2ème fois
+```
+
+### 11.2 - require et require_once
+
+- `require` : inclut le fichier. Si absent → **erreur fatale**, le script STOPPE.
+- `require_once` : idem, mais n'inclut **qu'une seule fois** le même fichier.
+
+```php
+<?php
+require("config.php");       // Si absent, le script s'arrête
+require_once("functions.php"); // Inclus une seule fois
+```
+
+> 💡 **Bonne pratique** : utilisez `require_once` pour les fichiers critiques (config, fonctions), `include` pour les templates optionnels.
+
+📖 [Documentation : include](https://www.php.net/manual/fr/function.include.php) | [require](https://www.php.net/manual/fr/function.require.php)
+
+---
+
+### 11.3 - Le contrôleur frontal (Front Controller)
+
+Le contrôleur frontal centralise **toutes les requêtes** vers un seul fichier `index.php` qui redirige vers les bons templates.
+
+**Architecture de fichiers :**
+
+```
+projet/
+├── index.php           → redirige vers public/
+├── public/
+│   ├── index.php       → CONTRÔLEUR FRONTAL
+│   ├── css/style.css
+│   ├── js/script.js
+│   └── img/
+├── templates/
+│   ├── inc/
+│   │   ├── menu.php
+│   │   └── footer.php
+│   ├── accueil.php
+│   ├── contact.php
+│   ├── actualites.php
+│   └── page-404.php
+```
+
+**index.php (racine) :**
+```php
+<?php
+header("Location: public");
+exit;
+```
+
+**public/index.php (contrôleur frontal) :**
+```php
+<?php
+if (isset($_GET['section'])) {
+    switch ($_GET['section']) {
+        case 'contact':
+            include('../templates/contact.php');
+            break;
+        case 'actualites':
+            include('../templates/actualites.php');
+            break;
+        case 'rgpd':
+            include('../templates/mentions-legales.php');
+            break;
+        default:
+            include('../templates/page-404.php');
+    }
+} else {
+    include('../templates/accueil.php');
+}
+```
+
+**templates/accueil.php :**
+```php
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Accueil</title>
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <?php include 'inc/menu.php'; ?>
+    <h1>Bienvenue</h1>
+    <p>Page d'accueil</p>
+    <?php include 'inc/footer.php'; ?>
+</body>
+</html>
+```
+
+> ⚠️ Les chemins CSS/JS/images partent du **contrôleur frontal** (dossier `public/`).
+
+#### ✏️ Exercice 19
+> Créez un dossier `19-front-controller/` avec l'architecture ci-dessus. Créez un site de 4 pages (accueil, actualités, contact, mentions légales) avec un menu de navigation par `$_GET` et une page 404.
 
 ---
 
