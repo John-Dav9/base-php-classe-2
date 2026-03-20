@@ -50,7 +50,7 @@ const NOS_PAGES = ['accueil', 'contact','actualites'];
 
 On va copier `config.php` sous le nom de `config.base.php` et retirer les valeurs dangereuses! Dans notre exemple je retire les pages valides du tableau, ce n'est pas vraiment de la sécurité
 
-On pourra, à la maison par exemple ou un autre utiliseur, recréer `config.php` en partant de `config.base.php`
+On DEVRA, à la maison par exemple, ou un autre utiliseur, recréer `config.php` en partant de `config.base.php`
 
 ### Création des dossiers et fichiers
 
@@ -85,10 +85,32 @@ Ce fichier est celui où **TOUTES les requêtes http vers les pages vont transit
 
 Pour voir le chemin, on peut utiliser :
 ```php
-// contantes magiques __DIR__, 
-// nous donne le chemin du serveur depuis la racine
-echo __DIR__;
+<?php
+# Formateur/19-front-controller/public/index.php
+
+/*****************************************
+**
+**          CONTROLLER FRONTAL
+**
+** Ce fichier va gérer toutes les requêtes 
+** Vers les pages du site
+**
+******************************************/
+
+// inclure les dependances, 
+// oubliez pas de le copier depuis config.base.php
+// sous le nom config.php
+require_once "../config.php";
+
+
+echo 'Racine de notre projet :'.PATH_TO_PROJECT_ROOT;
+
+
 ```
+
+### Création des vues
+
+Création du dossier `view` avec les 3 vues
 
 
 
