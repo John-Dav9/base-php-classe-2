@@ -18,6 +18,17 @@ header("Location: public");
 // le serveur PHP, bonne pratique
 exit;
 ```
+- Création du contôleur frontal.
 
+### public/index.php -> Front Controller
+
+Ce fichier est celui où **TOUTES les requêtes http vers les pages vont transiter**.
+
+Pour voir le chemin, on peut utiliser :
+```php
+// contantes magiques __DIR__, 
+// nous donne le chemin du serveur depuis la racine
+echo __DIR__;
+```
 
 
