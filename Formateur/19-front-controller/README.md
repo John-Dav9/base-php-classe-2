@@ -18,6 +18,13 @@ header("Location: public");
 // le serveur PHP, bonne pratique
 exit;
 ```
+- Création d'un hôte virtuel sur Wamp sur votre machine qui pointe directement vers les dossier `public`
+
+```bash
+19-front-controller 
+- Directory : c:/web2026/php/base-php-classe-2/formateur 19-front-controller/public
+
+```
 - Création du contôleur frontal.
 
 ### public/index.php -> Front Controller
