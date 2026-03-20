@@ -38,7 +38,15 @@ echo__DIR__;
  * 
  * *********************************************/
 
-// 
+// inclure les dependances
+// ici les fichier de configuration
+//require_once rend le changement du fichier
+//
+include "../config.php";
+
+echo PATH_TO_PROJET_ROOT;
+
+
 // contantes magiques __DIR__, 
 // nous donne le chemin du serveur depuis la racine
 echo __DIR__;
