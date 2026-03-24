@@ -14,13 +14,15 @@
     // nombre au hazard entre 1 et 20 (PHP 7.1 rand = alias de mt_rand)
     $nombre = mt_rand(1,20);
 
-    $euclidienne = $nombre%5;
-    echo "$nombre par "
+  
+    
 
       //si le reste de la division enclidienne vaut strictemment 0
-      if(($nombre%2)){
+      if(($nombre%2)===0){
         echo "$nombre est pair";
-      }  
+      } else{
+        echo "$nombre est impair ";
+      } 
 
      
     // si on a pas de reste  de la division encludienne (%)
