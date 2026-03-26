@@ -18,6 +18,22 @@
 // celui qui est chargé, et pas celui-ci
 require_once "../config.php";
 
+// si il extiste une variable $_GET (URL)
+// nommée 'page'
+if(isset($_GET['page'])){
 
-echo 'Racine de notre projet :'.PATH_TO_PROJECT_ROOT;
+    // si elle est dans le tableau des pages acceptées depuis config.php
+    if(in_array($_GET['page'], NOS_PAGES)){
+        // on les charges
+        include PATH_TO_PROJECT_ROOT."/view/".$_GET['page'].".php";
+    }else{
+        // sinon chargement de l'erreur 404
+        include PATH_TO_PROJECT_ROOT.'/view/error-404.php';
+    }
+
+// page d'accueil
+}else{
+    // chargement de l'accueil
+    include PATH_TO_PROJECT_ROOT.'/view/accueil.php';
+}
 
